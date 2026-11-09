@@ -144,6 +144,34 @@ const dict: Dict = {
   viewAll: { sw: 'Tazama Zote', en: 'View All' },
   recent: { sw: 'Ya Karibuni', en: 'Recent' },
   summary: { sw: 'Muhtasari', en: 'Summary' },
+
+  // Dashboard (v2 layout)
+  welcomeOwner: { sw: 'Karibu tena, Mmiliki wa Saluni!', en: 'Welcome back, Salon Owner!' },
+  productsInventory: { sw: 'Bidhaa & Stock', en: 'Products & Inventory' },
+  totalPurchases: { sw: 'Jumla ya Ununuzi', en: 'Total Purchases' },
+  totalSales: { sw: 'Jumla ya Mauzo', en: 'Total Sales' },
+  totalExpenses: { sw: 'Jumla ya Matumizi', en: 'Total Expenses' },
+  vsLastPeriod: { sw: 'ukilinganisha na kipindi kilichopita', en: 'vs last period' },
+  salesOverview: { sw: 'Muhtasari wa Mauzo', en: 'Sales Overview' },
+  inventoryStatus: { sw: 'Hali ya Stock', en: 'Inventory Status' },
+  productsLowStock: { sw: 'bidhaa zinakaribia kuisha', en: 'products are low in stock' },
+  allStockHealthy: { sw: 'Stock zote ziko salama', en: 'All stock levels are healthy' },
+  viewDetails: { sw: 'Tazama', en: 'View Details' },
+  recentActivities: { sw: 'Shughuli za Karibuni', en: 'Recent Activities' },
+  profitSummary: { sw: 'Muhtasari wa Faida', en: 'Profit Summary' },
+  businessGrowing: { sw: 'Biashara Yako Inakua!', en: 'Your Business is Growing!' },
+  businessAttention: { sw: 'Fuatilia Matumizi Yako', en: 'Keep an Eye on Costs' },
+  netProfitPeriod: { sw: 'Faida halisi ya kipindi hiki', en: 'Net profit this period' },
+  viewReports: { sw: 'Tazama Ripoti', en: 'View Reports' },
+  growBusiness: { sw: 'Kuza Biashara ya Saluni Yako', en: 'Grow Your Salon Business' },
+  withLucentia: { sw: 'pamoja na Lucentia', en: 'with Lucentia' },
+  activityPurchase: { sw: 'Ununuzi mpya', en: 'New purchase' },
+  activityService: { sw: 'Huduma imerekodiwa', en: 'Service recorded' },
+  activityExpense: { sw: 'Matumizi yameongezwa', en: 'Expense added' },
+  activityUsage: { sw: 'Bidhaa imetumika', en: 'Product used' },
+  expensesLabel: { sw: 'Matumizi', en: 'Expenses' },
+  salesLabel: { sw: 'Mauzo', en: 'Sales' },
+  owner: { sw: 'Mmiliki', en: 'Owner' },
 };
 
 interface I18nContextValue {
@@ -155,7 +183,7 @@ interface I18nContextValue {
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>('sw');
+  const [lang, setLang] = useState<Lang>('en');
 
   const t = (key: string): string => {
     const entry = dict[key];

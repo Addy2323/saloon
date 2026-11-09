@@ -21,3 +21,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# SQLite database and uploaded product images
+data/*.sqlite*
+data/uploads/*

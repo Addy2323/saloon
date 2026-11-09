@@ -1,6 +1,6 @@
-import { formatCurrency, formatNumber } from './format';
+import { formatCurrency, formatNumber } from '@/lib/format';
 
-// Simple bar chart using SVG — no external dependencies
+// Simple bar chart using SVG — Purple & Gold accents
 interface BarChartProps {
   data: { label: string; value: number }[];
   color?: string;
@@ -8,32 +8,36 @@ interface BarChartProps {
   valueFormatter?: (v: number) => string;
 }
 
-export function BarChart({ data, color = '#e04b72', height = 200, valueFormatter = formatCurrency }: BarChartProps) {
+export function BarChart({ data, color = '#6D28D9', height = 200, valueFormatter = formatCurrency }: BarChartProps) {
   if (data.length === 0) return null;
   const max = Math.max(...data.map((d) => d.value), 1);
-  const barWidth = 100 / data.length;
 
   return (
     <div className="w-full" style={{ height }}>
       <div className="flex items-end justify-between gap-2 h-full">
         {data.map((d, i) => {
           const h = (d.value / max) * 100;
+          const isPeak = d.value === max;
           return (
             <div key={i} className="flex-1 flex flex-col items-center justify-end h-full group">
               <div className="relative w-full flex justify-center flex-1 items-end">
                 <div
-                  className="w-full max-w-[48px] rounded-t-lg transition-all duration-500 hover:opacity-80 relative"
+                  className="w-full max-w-[48px] rounded-t-lg transition-all duration-500 hover:opacity-90 relative"
                   style={{
                     height: `${Math.max(h, 2)}%`,
-                    background: `linear-gradient(to top, ${color}, ${color}cc)`,
+                    background: isPeak
+                      ? 'linear-gradient(to top, #B8862D, #D4A24C)'
+                      : `linear-gradient(to top, ${color}, #7C3AED)`,
                   }}
                 >
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-[10px] font-semibold text-ink-700 bg-white px-2 py-1 rounded-md shadow-soft">
+                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-[10px] font-bold text-[#1F2937] bg-white border border-[#E5E7EB] px-2 py-1 rounded-md shadow-soft">
                     {valueFormatter(d.value)}
                   </div>
                 </div>
               </div>
-              <span className="text-[10px] text-ink-500 mt-2 truncate w-full text-center">{d.label}</span>
+              <span className="text-[11px] font-medium text-[#4B5563] mt-2 truncate w-full text-center">
+                {d.label}
+              </span>
             </div>
           );
         })}
@@ -48,7 +52,7 @@ interface LineChartProps {
   height?: number;
 }
 
-export function LineChart({ data, color = '#e04b72', height = 200 }: LineChartProps) {
+export function LineChart({ data, color = '#6D28D9', height = 200 }: LineChartProps) {
   if (data.length < 2) {
     return <BarChart data={data} color={color} height={height} />;
   }
@@ -72,19 +76,36 @@ export function LineChart({ data, color = '#e04b72', height = 200 }: LineChartPr
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
         <defs>
           <linearGradient id={`grad-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity="0.2" />
-            <stop offset="100%" stopColor={color} stopOpacity="0" />
+            <stop offset="0%" stopColor={color} stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#D4A24C" stopOpacity="0.02" />
           </linearGradient>
         </defs>
         <path d={areaD} fill={`url(#grad-${color.replace('#', '')})`} />
-        <path d={pathD} fill="none" stroke={color} strokeWidth="1.5" vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round" />
+        <path
+          d={pathD}
+          fill="none"
+          stroke={color}
+          strokeWidth="1.75"
+          vectorEffect="non-scaling-stroke"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
         {points.map((p, i) => (
-          <circle key={i} cx={p.x} cy={p.y} r="1.2" fill={color} vectorEffect="non-scaling-stroke" />
+          <circle
+            key={i}
+            cx={p.x}
+            cy={p.y}
+            r="1.5"
+            fill={i === points.length - 1 ? '#D4A24C' : color}
+            vectorEffect="non-scaling-stroke"
+          />
         ))}
       </svg>
       <div className="flex justify-between mt-2">
         {data.map((d, i) => (
-          <span key={i} className="text-[10px] text-ink-500">{d.label}</span>
+          <span key={i} className="text-[11px] font-medium text-[#4B5563]">
+            {d.label}
+          </span>
         ))}
       </div>
     </div>
@@ -107,7 +128,7 @@ export function DonutChart({ data, size = 180 }: DonutChartProps) {
   return (
     <div className="flex flex-col sm:flex-row items-center gap-6">
       <svg width={size} height={size} viewBox="0 0 100 100" className="-rotate-90">
-        <circle cx="50" cy="50" r={radius} fill="none" stroke="#f0eeec" strokeWidth="12" />
+        <circle cx="50" cy="50" r={radius} fill="none" stroke="#F3F4F6" strokeWidth="12" />
         {data.map((d, i) => {
           const fraction = d.value / total;
           const dash = fraction * circumference;
@@ -134,7 +155,7 @@ export function DonutChart({ data, size = 180 }: DonutChartProps) {
           textAnchor="middle"
           dominantBaseline="middle"
           className="rotate-90"
-          style={{ transformOrigin: 'center', font: '600 11px sans-serif', fill: '#3d3a34' }}
+          style={{ transformOrigin: 'center', font: '700 11px sans-serif', fill: '#1F2937' }}
           transform="rotate(90 50 50)"
         >
           {formatNumber(total)}
@@ -144,8 +165,8 @@ export function DonutChart({ data, size = 180 }: DonutChartProps) {
         {data.map((d, i) => (
           <div key={i} className="flex items-center gap-2 text-sm">
             <span className="w-3 h-3 rounded-full" style={{ background: d.color }} />
-            <span className="text-ink-600 flex-1 truncate">{d.label}</span>
-            <span className="font-semibold text-ink-900">{formatCurrency(d.value)}</span>
+            <span className="text-[#4B5563] flex-1 truncate">{d.label}</span>
+            <span className="font-bold text-[#111827]">{formatCurrency(d.value)}</span>
           </div>
         ))}
       </div>
