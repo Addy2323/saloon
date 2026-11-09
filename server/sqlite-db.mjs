@@ -383,78 +383,142 @@ function initSchema() {
     CREATE INDEX IF NOT EXISTS idx_product_usage_sale ON product_usage(sale_id);
   `);
 
-  const countRow = queryGet('SELECT COUNT(*) AS cnt FROM categories');
-  if (!countRow || Number(countRow.cnt) === 0) {
-    const now = new Date().toISOString();
-    const defaultCategories = [
-      {
-        id: 'cat-prod-1',
-        name: 'Braiding & Rasta',
-        type: 'product',
-        description: 'Braiding hair packs, Rasta extensions, and crochet supplies',
-        status: 'active',
-      },
-      {
-        id: 'cat-prod-2',
-        name: 'Hair Care & Oils',
-        type: 'product',
-        description: 'Hair oils, serums, edge control wax, and styling gels',
-        status: 'active',
-      },
-      {
-        id: 'cat-prod-3',
-        name: 'Hair Wash & Treatment',
-        type: 'product',
-        description: 'Shampoos, leave-in conditioners, hair masks, and relaxer kits',
-        status: 'active',
-      },
-      {
-        id: 'cat-exp-1',
-        name: 'Utilities & Bills',
-        type: 'expense',
-        description: 'Electricity (LUKU), water (DAWASA), internet, and municipal waste bills',
-        status: 'active',
-      },
-      {
-        id: 'cat-exp-2',
-        name: 'Shop Operations & Rent',
-        type: 'expense',
-        description: 'Monthly salon rent, staff meals, allowances, and equipment maintenance',
-        status: 'active',
-      },
-      {
-        id: 'cat-exp-3',
-        name: 'Cleaning & Sanitation',
-        type: 'expense',
-        description: 'Towels, disinfectants, detergents, and daily salon hygiene supplies',
-        status: 'active',
-      },
-      {
-        id: 'cat-srv-1',
-        name: 'Braiding & Protective Styles',
-        type: 'service',
-        description: 'Knotless braids, Twende Kilioni, and Rasta installations',
-        status: 'active',
-      },
-      {
-        id: 'cat-srv-2',
-        name: 'Wash, Treatment & Styling',
-        type: 'service',
-        description: 'Deep conditioning, silk press, blow dry, and hair treatment services',
-        status: 'active',
-      },
-    ];
-    runTransaction(() => {
-      for (const c of defaultCategories) {
+  const now = new Date().toISOString();
+  const defaultCategories = [
+    {
+      id: 'cat-prod-1',
+      name: 'Braiding & Rasta',
+      type: 'product',
+      description: 'Braiding hair packs, Rasta extensions, and crochet supplies',
+      status: 'active',
+    },
+    {
+      id: 'cat-prod-2',
+      name: 'Hair Care & Oils',
+      type: 'product',
+      description: 'Hair oils, serums, edge control wax, and styling gels',
+      status: 'active',
+    },
+    {
+      id: 'cat-prod-3',
+      name: 'Hair Wash & Treatment',
+      type: 'product',
+      description: 'Shampoos, leave-in conditioners, hair masks, and relaxer kits',
+      status: 'active',
+    },
+    {
+      id: 'cat-prod-4',
+      name: 'Hair Products',
+      type: 'product',
+      description: 'General hair products and styling supplies',
+      status: 'active',
+    },
+    {
+      id: 'cat-prod-5',
+      name: 'Hair Tools',
+      type: 'product',
+      description: 'Combs, clips, dryers, and salon tools',
+      status: 'active',
+    },
+    {
+      id: 'cat-prod-6',
+      name: 'Treatments',
+      type: 'product',
+      description: 'Deep conditioning and hair treatment products',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-1',
+      name: 'Utilities',
+      type: 'expense',
+      description: 'Electricity (LUKU), water (DAWASA), internet, and municipal waste bills',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-2',
+      name: 'Rent',
+      type: 'expense',
+      description: 'Monthly salon rent',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-3',
+      name: 'Staff Welfare',
+      type: 'expense',
+      description: 'Staff meals, allowances, and welfare',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-4',
+      name: 'Maintenance',
+      type: 'expense',
+      description: 'Salon equipment maintenance and repairs',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-5',
+      name: 'Transport',
+      type: 'expense',
+      description: 'Transportation and delivery costs',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-6',
+      name: 'Cleaning & Sanitation',
+      type: 'expense',
+      description: 'Towels, disinfectants, detergents, and daily salon hygiene supplies',
+      status: 'active',
+    },
+    {
+      id: 'cat-exp-7',
+      name: 'Other',
+      type: 'expense',
+      description: 'Other daily operating expenses',
+      status: 'active',
+    },
+    {
+      id: 'cat-srv-1',
+      name: 'Braiding & Protective Styles',
+      type: 'service',
+      description: 'Knotless braids, Twende Kilioni, and Rasta installations',
+      status: 'active',
+    },
+    {
+      id: 'cat-srv-2',
+      name: 'Wash, Treatment & Styling',
+      type: 'service',
+      description: 'Deep conditioning, silk press, blow dry, and hair treatment services',
+      status: 'active',
+    },
+  ];
+
+  const defaultServices = [
+    { id: 'srv-seed-1', name: 'Kusuka (Braiding)', category_id: 'cat-srv-1', default_price: 15000, active: 1 },
+    { id: 'srv-seed-2', name: 'Kufunga Rasta (Dreadlocks)', category_id: 'cat-srv-1', default_price: 20000, active: 1 },
+    { id: 'srv-seed-3', name: 'Relaxing', category_id: 'cat-srv-2', default_price: 12000, active: 1 },
+    { id: 'srv-seed-4', name: 'Washing', category_id: 'cat-srv-2', default_price: 5000, active: 1 },
+    { id: 'srv-seed-5', name: 'Hair Treatment', category_id: 'cat-srv-2', default_price: 10000, active: 1 },
+    { id: 'srv-seed-6', name: 'Blow Dry', category_id: 'cat-srv-2', default_price: 8000, active: 1 },
+    { id: 'srv-seed-7', name: 'Hair Styling', category_id: 'cat-srv-2', default_price: 10000, active: 1 },
+  ];
+
+  runTransaction(() => {
+    for (const c of defaultCategories) {
+      runSql(
+        'INSERT OR IGNORE INTO categories (id, name, type, description, status, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+        [c.id, c.name, c.type, c.description, c.status, now]
+      );
+    }
+    const srvCount = queryGet('SELECT COUNT(*) AS cnt FROM services');
+    if (!srvCount || Number(srvCount.cnt) === 0) {
+      for (const s of defaultServices) {
         runSql(
-          'INSERT OR IGNORE INTO categories (id, name, type, description, status, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-          [c.id, c.name, c.type, c.description, c.status, now]
+          'INSERT OR IGNORE INTO services (id, name, category_id, default_price, active, created_at) VALUES (?, ?, ?, ?, ?, ?)',
+          [s.id, s.name, s.category_id, s.default_price, s.active, now]
         );
       }
-    });
-  } else if (!fs.existsSync(DB_PATH)) {
-    persistDatabaseToDisk();
-  }
+    }
+  });
 }
 
 initSchema();
