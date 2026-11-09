@@ -14,6 +14,21 @@
     background-color: #FFFFFF;
     color: #1F2937;
   }
+
+  /* Default 75% UI zoom scaling on desktop & tablet screens so the full dashboard fits comfortably at 100% browser zoom */
+  @media (min-width: 768px) {
+    html {
+      zoom: 0.75;
+    }
+    body,
+    #root,
+    .min-h-screen {
+      min-height: 133.3334vh !important;
+    }
+    .h-screen {
+      height: 133.3334vh !important;
+    }
+  }
 }
 
 @layer components {
